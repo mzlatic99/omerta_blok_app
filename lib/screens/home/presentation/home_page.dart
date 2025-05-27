@@ -68,7 +68,11 @@ void _inputDialog(BuildContext context) {
       elevation: 10,
       shadowColor: ThemeColors.primary,
       title: Text('Unesi broj igrača', style: TextStyles.mainButton),
-      content: InputWidget(controller: controller, hint: "3-7"),
+      content: InputWidget(
+        controller: controller,
+        hint: "3-7",
+        keyboardType: TextInputType.number,
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),

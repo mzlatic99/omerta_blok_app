@@ -57,7 +57,11 @@ class _GamePageState extends ConsumerState<GamePage> {
           'Dodaj bodove za ${player.name}',
           style: TextStyles.mainButton,
         ),
-        content: InputWidget(controller: controller, hint: "npr. 10"),
+        content: InputWidget(
+          controller: controller,
+          hint: "npr. 10",
+          keyboardType: TextInputType.number,
+        ),
         actions: [
           TextButton(
             style: TextButton.styleFrom(
@@ -114,6 +118,7 @@ class _GamePageState extends ConsumerState<GamePage> {
                       child: InputWidget(
                         controller: _nameControllers[index],
                         hint: "Ime ${index + 1}. igrača",
+                        keyboardType: TextInputType.name,
                       ),
                     );
                   }),
