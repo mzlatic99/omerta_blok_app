@@ -52,6 +52,7 @@ class TextStyles {
     fontFamily: _fontFamily,
     fontSize: 12,
     color: Colors.lightGreen,
+    fontWeight: FontWeight.bold,
   );
 
   static TextStyle hintText = const TextStyle(

@@ -154,9 +154,13 @@ class _GamePageState extends ConsumerState<GamePage> {
     final sortedPlayers = players.sorted(
       (a, b) => a.currentScore.compareTo(b.currentScore),
     );
-    final leadingPlayerId = sortedPlayers.isNotEmpty
-        ? sortedPlayers.first.id
+    final int topScore = sortedPlayers.isNotEmpty
+        ? sortedPlayers.first.currentScore
         : -1;
+    final Set<int> leadingPlayerIds = sortedPlayers
+        .where((p) => p.currentScore == topScore)
+        .map((p) => p.id)
+        .toSet();
 
     return Scaffold(
       appBar: AppBar(
@@ -191,7 +195,7 @@ class _GamePageState extends ConsumerState<GamePage> {
                     child: ListView(
                       children: [
                         ...sortedPlayers.map((player) {
-                          final isLeader = player.id == leadingPlayerId;
+                          final isLeader = leadingPlayerIds.contains(player.id);
                           final updatedThisRound = ref
                               .read(playerProvider.notifier)
                               .playersUpdatedThisRound;
