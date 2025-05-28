@@ -228,7 +228,7 @@ class _GamePageState extends ConsumerState<GamePage> {
                                 borderRadius: BorderRadiusGeometry.circular(8),
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 30,
+                                horizontal: 14,
                                 vertical: 24,
                               ),
                             ),
@@ -236,31 +236,30 @@ class _GamePageState extends ConsumerState<GamePage> {
                         ),
                         SizedBox(width: 10),
                         Expanded(
-                          child: SafeArea(
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                ref
-                                    .read(playerProvider.notifier)
-                                    .saveCurrentGame();
-                                ref.read(playerProvider.notifier).resetGame();
-                                context.go('/scores');
-                              },
-                              icon: const Icon(
-                                Icons.save,
-                                color: Colors.lightGreenAccent,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              ref
+                                  .read(playerProvider.notifier)
+                                  .saveCurrentGame();
+                              ref.read(playerProvider.notifier).resetGame();
+                              context.go('/scores');
+                            },
+                            icon: const Icon(
+                              Icons.save,
+                              color: Colors.lightGreenAccent,
+                            ),
+                            label: Text(
+                              "Spremi",
+                              style: TextStyles.declineButton,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green[800],
+                              shape: BeveledRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(8),
                               ),
-                              label: Text(
-                                "Spremi rezultat",
-                                style: TextStyles.declineButton,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green[800],
-                                shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(
-                                    8,
-                                  ),
-                                ),
-                                padding: EdgeInsets.all(24),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 19,
+                                vertical: 24,
                               ),
                             ),
                           ),
