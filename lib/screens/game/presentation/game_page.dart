@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omerta_block_app/common/input_widget.dart';
 import 'package:omerta_block_app/common/main_button_widget.dart';
-import 'package:omerta_block_app/screens/game/presentation/game_controller.dart';
 import 'package:omerta_block_app/utility/sort_extension.dart';
+import '../../../providers/providers.dart';
 import '../../../theme/theme.dart';
 import '../models/player.dart';
 
@@ -90,12 +90,57 @@ class _GamePageState extends ConsumerState<GamePage> {
               ),
               onPressed: () {
                 final value = int.tryParse(controller.text.trim());
-                if (value != null && value > 0) {
+                if (value != null && value >= 0) {
                   ref.read(playerProvider.notifier).addPoints(player.id, value);
                   Navigator.of(context).pop();
                 }
               },
               child: Text('Dodaj', style: TextStyles.confirmButton),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editPointsDialog(Player player) {
+    final controller = TextEditingController(text: player.lastScore.toString());
+    final focusNode = FocusNode();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          focusNode.requestFocus();
+        });
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 95, 65, 54),
+          title: Text(
+            'Uredi bodove za ${player.name}',
+            style: TextStyles.mainButton,
+          ),
+          content: InputWidget(
+            controller: controller,
+            hint: "npr. 10",
+            keyboardType: TextInputType.number,
+            focusNode: focusNode,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Odustani', style: TextStyles.declineButton),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final value = int.tryParse(controller.text.trim());
+                if (value != null) {
+                  ref
+                      .read(playerProvider.notifier)
+                      .editLastPoints(player.id, value);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Spremi', style: TextStyles.confirmButton),
             ),
           ],
         );
@@ -115,7 +160,11 @@ class _GamePageState extends ConsumerState<GamePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: !_namesEntered ? Text('Unos Igrača') : Text('Tablica'),
+        title: !_namesEntered
+            ? Text('Unos Igrača')
+            : Text(
+                'Tablica - Runda ${ref.watch(playerProvider.notifier).currentRound}',
+              ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -143,6 +192,12 @@ class _GamePageState extends ConsumerState<GamePage> {
                       children: [
                         ...sortedPlayers.map((player) {
                           final isLeader = player.id == leadingPlayerId;
+                          final updatedThisRound = ref
+                              .read(playerProvider.notifier)
+                              .playersUpdatedThisRound;
+                          final needsUpdate = !updatedThisRound.contains(
+                            player.id,
+                          );
                           return Card(
                             margin: EdgeInsets.only(bottom: 16),
                             elevation: isLeader ? 8 : 0,
@@ -167,7 +222,12 @@ class _GamePageState extends ConsumerState<GamePage> {
                               ),
                               title: Row(
                                 children: [
-                                  Text(player.name, style: TextStyles.names),
+                                  Flexible(
+                                    child: Text(
+                                      player.name,
+                                      style: TextStyles.names,
+                                    ),
+                                  ),
                                   if (isLeader)
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8),
@@ -182,15 +242,35 @@ class _GamePageState extends ConsumerState<GamePage> {
                                         size: 24,
                                       ),
                                     ),
+                                  if (needsUpdate)
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Icon(
+                                        Icons.access_time,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
                                 ],
                               ),
                               subtitle: Text(
                                 'Zadnje dodano: +${player.lastScore}',
                                 style: TextStyles.addedText,
                               ),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.add),
-                                onPressed: () => _addPointsDialog(player),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    tooltip: "Uredi bodove",
+                                    onPressed: () => _editPointsDialog(player),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    tooltip: "Dodaj bodove",
+                                    onPressed: () => _addPointsDialog(player),
+                                  ),
+                                ],
                               ),
                             ),
                           );

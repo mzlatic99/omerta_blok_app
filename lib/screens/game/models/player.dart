@@ -22,4 +22,13 @@ class Player extends HiveObject {
     this.currentScore = 0,
     this.lastScore = 0,
   });
+
+  Player copyWith({int? id, String? name, int? currentScore, int? lastScore}) {
+    return Player(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      currentScore: currentScore ?? this.currentScore,
+      lastScore: lastScore ?? this.lastScore,
+    );
+  }
 }

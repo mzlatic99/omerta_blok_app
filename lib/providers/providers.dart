@@ -1,3 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final scoreLimitProvider = StateProvider<int>((ref) => 0);
+import '../screens/game/models/player.dart';
+import '../screens/game/presentation/game_controller.dart';
+
+final playerProvider = StateNotifierProvider<GameController, List<Player>>((
+  ref,
+) {
+  return GameController();
+});

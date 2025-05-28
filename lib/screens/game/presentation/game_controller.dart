@@ -10,6 +10,14 @@ class GameController extends StateNotifier<List<Player>> {
   }
 
   final _playerBox = Hive.box<Player>('players');
+  final _resultBox = Hive.box<GameResult>('results');
+
+  final Set<int> _updatedThisRound = {};
+  Set<int> get playersUpdatedThisRound => _updatedThisRound;
+
+  int _currentRound = 1;
+
+  int get currentRound => _currentRound;
 
   void _loadPlayers() {
     final stored = _playerBox.values.toList();
@@ -27,9 +35,14 @@ class GameController extends StateNotifier<List<Player>> {
     for (var player in newPlayers) {
       _playerBox.add(player);
     }
+
+    _updatedThisRound.clear();
+    _currentRound = 1;
   }
 
   void addPoints(int playerId, int points) {
+    if (points < 0) return;
+
     final updated = [
       for (final player in state)
         if (player.id == playerId)
@@ -44,13 +57,18 @@ class GameController extends StateNotifier<List<Player>> {
     ];
     state = updated;
 
+    _updatedThisRound.add(playerId);
+
+    if (_updatedThisRound.length == state.length) {
+      _currentRound++;
+      _updatedThisRound.clear();
+    }
+
     _playerBox.clear();
     for (var player in updated) {
       _playerBox.add(player);
     }
   }
-
-  final _resultBox = Hive.box<GameResult>('results');
 
   void saveCurrentGame() {
     if (state.isNotEmpty) {
@@ -60,12 +78,31 @@ class GameController extends StateNotifier<List<Player>> {
 
   void resetGame() {
     _playerBox.clear();
+    _updatedThisRound.clear();
+    _currentRound = 1;
     state = [];
   }
-}
 
-final playerProvider = StateNotifierProvider<GameController, List<Player>>((
-  ref,
-) {
-  return GameController();
-});
+  void editLastPoints(int playerId, int newPoints) {
+    if (newPoints < 0) return;
+
+    final updated = [
+      for (final player in state)
+        if (player.id == playerId)
+          Player(
+            id: player.id,
+            name: player.name,
+            currentScore: player.currentScore - player.lastScore + newPoints,
+            lastScore: newPoints,
+          )
+        else
+          player,
+    ];
+    state = updated;
+
+    _playerBox.clear();
+    for (var player in updated) {
+      _playerBox.add(player);
+    }
+  }
+}
