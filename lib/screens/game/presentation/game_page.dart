@@ -203,55 +203,66 @@ class _GamePageState extends ConsumerState<GamePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            ref.read(playerProvider.notifier).resetGame();
-                            context.go('/');
-                          },
-                          icon: const Icon(
-                            Icons.restart_alt,
-                            color: Color.fromARGB(255, 255, 17, 0),
-                          ),
-                          label: Text(
-                            "Resetiraj",
-                            style: TextStyles.declineButton,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              190,
-                              86,
-                              0,
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              ref.read(playerProvider.notifier).resetGame();
+                              context.go('/');
+                            },
+                            icon: const Icon(
+                              Icons.restart_alt,
+                              color: Color.fromARGB(255, 255, 17, 0),
                             ),
-                            shape: BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8),
+                            label: Text(
+                              "Resetiraj",
+                              style: TextStyles.declineButton,
                             ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 30,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                190,
+                                86,
+                                0,
+                              ),
+                              shape: BeveledRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(8),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30,
+                                vertical: 24,
+                              ),
                             ),
                           ),
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            ref.read(playerProvider.notifier).saveCurrentGame();
-                            ref.read(playerProvider.notifier).resetGame();
-                            context.go('/scores');
-                          },
-                          icon: const Icon(
-                            Icons.save,
-                            color: Colors.lightGreenAccent,
-                          ),
-                          label: Text(
-                            "Spremi rezultat",
-                            style: TextStyles.declineButton,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green[800],
-                            shape: BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: SafeArea(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                ref
+                                    .read(playerProvider.notifier)
+                                    .saveCurrentGame();
+                                ref.read(playerProvider.notifier).resetGame();
+                                context.go('/scores');
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Colors.lightGreenAccent,
+                              ),
+                              label: Text(
+                                "Spremi rezultat",
+                                style: TextStyles.declineButton,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[800],
+                                shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    8,
+                                  ),
+                                ),
+                                padding: EdgeInsets.all(24),
+                              ),
                             ),
-                            padding: EdgeInsets.all(30),
                           ),
                         ),
                       ],

@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
   flutter_riverpod: ^2.6.1
   hive_flutter: ^1.1.0
   go_router: ^15.1.2
@@ -31,8 +30,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  fonts:
+    - family: NotoSerifDisplay
+      fonts:
+        - asset: assets/fonts/NotoSerifDisplay-Regular.ttf
+        - asset: assets/fonts/NotoSerifDisplay-Bold.ttf
+          weight: 700
+
   assets:
     - assets/
+    - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

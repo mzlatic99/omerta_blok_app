@@ -1,68 +1,79 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'theme_colors.dart';
 
 class TextStyles {
-  static TextStyle notoSerif = GoogleFonts.notoSerifDisplay();
+  static const String _fontFamily = 'NotoSerifDisplay';
 
-  static TextStyle confirmButton = notoSerif.copyWith(
+  static TextStyle confirmButton = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: ThemeColors.primary,
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle names = notoSerif.copyWith(
+  static TextStyle names = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 14,
-    color: const Color.fromARGB(255, 194, 130, 11),
+    color: Color.fromARGB(255, 194, 130, 11),
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle declineButton = notoSerif.copyWith(
+  static TextStyle declineButton = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 14,
     color: ThemeColors.white,
   );
 
-  static TextStyle titleText = notoSerif.copyWith(
+  static TextStyle titleText = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 30,
     color: ThemeColors.white,
   );
 
-  static TextStyle historyTitle = notoSerif.copyWith(
+  static TextStyle historyTitle = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 16,
     color: ThemeColors.main,
   );
 
-  static TextStyle subtitle = notoSerif.copyWith(
+  static TextStyle subtitle = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 14,
     color: ThemeColors.main,
   );
 
-  static TextStyle text = notoSerif.copyWith(
+  static TextStyle text = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: ThemeColors.greyText,
   );
 
-  static TextStyle addedText = notoSerif.copyWith(
+  static TextStyle addedText = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: Colors.lightGreen,
   );
 
-  static TextStyle hintText = notoSerif.copyWith(
+  static TextStyle hintText = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: Colors.orange,
   );
 
-  static TextStyle alertText = notoSerif.copyWith(
+  static TextStyle alertText = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: ThemeColors.white,
   );
 
-  static TextStyle mainText = notoSerif.copyWith(
+  static TextStyle mainText = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 12,
     color: ThemeColors.main,
   );
 
-  static TextStyle mainButton = notoSerif.copyWith(
+  static TextStyle mainButton = const TextStyle(
+    fontFamily: _fontFamily,
     fontSize: 18,
     color: ThemeColors.white,
     fontWeight: FontWeight.w500,
