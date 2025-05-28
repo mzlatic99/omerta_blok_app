@@ -23,7 +23,7 @@ class AppThemes {
       shadowColor: Colors.amber,
     ),
     inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyles.text,
+      hintStyle: TextStyles.hintText,
       contentPadding: const EdgeInsets.all(15),
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: ThemeColors.primary, width: 2),

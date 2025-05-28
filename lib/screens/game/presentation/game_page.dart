@@ -44,52 +44,62 @@ class _GamePageState extends ConsumerState<GamePage> {
 
   void _addPointsDialog(Player player) {
     final controller = TextEditingController();
+    final focusNode = FocusNode();
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        elevation: 10,
-        shadowColor: ThemeColors.primary,
-        shape: BeveledRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(20),
-        ),
-        backgroundColor: ThemeColors.main,
-        title: Text(
-          'Dodaj bodove za ${player.name}',
-          style: TextStyles.mainButton,
-        ),
-        content: InputWidget(
-          controller: controller,
-          hint: "npr. 10",
-          keyboardType: TextInputType.number,
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(20),
-              ),
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Odustani', style: TextStyles.declineButton),
+      builder: (context) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          focusNode.requestFocus();
+        });
+        return AlertDialog(
+          backgroundColor: const Color.fromARGB(255, 95, 65, 54),
+          elevation: 10,
+          shadowColor: Colors.brown,
+          shape: BeveledRectangleBorder(
+            borderRadius: BorderRadiusGeometry.circular(20),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ThemeColors.main,
-              shape: BeveledRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(20),
-              ),
-            ),
-            onPressed: () {
-              final value = int.tryParse(controller.text.trim());
-              if (value != null && value > 0) {
-                ref.read(playerProvider.notifier).addPoints(player.id, value);
-                Navigator.of(context).pop();
-              }
-            },
-            child: Text('Dodaj', style: TextStyles.confirmButton),
+          title: Text(
+            'Dodaj bodove za ${player.name}',
+            style: TextStyles.mainButton,
           ),
-        ],
-      ),
+          content: InputWidget(
+            controller: controller,
+            hint: "npr. 10",
+            keyboardType: TextInputType.number,
+            focusNode: focusNode,
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(15),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 24),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Odustani', style: TextStyles.declineButton),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ThemeColors.main,
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(15),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 24),
+              ),
+              onPressed: () {
+                final value = int.tryParse(controller.text.trim());
+                if (value != null && value > 0) {
+                  ref.read(playerProvider.notifier).addPoints(player.id, value);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Text('Dodaj', style: TextStyles.confirmButton),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -143,26 +153,21 @@ class _GamePageState extends ConsumerState<GamePage> {
                             shape: BeveledRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            color: isLeader
-                                ? Colors.orange[200]
-                                : Colors.orange[100],
+                            color: isLeader ? Colors.orange[100] : Colors.brown,
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundColor: Colors.white,
+                                backgroundColor: ThemeColors.primary,
                                 child: Text(
                                   '${player.currentScore}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: ThemeColors.primary,
+                                    color: ThemeColors.white,
                                   ),
                                 ),
                               ),
                               title: Row(
                                 children: [
-                                  Text(
-                                    player.name,
-                                    style: TextStyles.confirmButton,
-                                  ),
+                                  Text(player.name, style: TextStyles.names),
                                   if (isLeader)
                                     const Padding(
                                       padding: EdgeInsets.only(left: 8),
@@ -181,6 +186,7 @@ class _GamePageState extends ConsumerState<GamePage> {
                               ),
                               subtitle: Text(
                                 'Zadnje dodano: +${player.lastScore}',
+                                style: TextStyles.addedText,
                               ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.add),
@@ -195,30 +201,8 @@ class _GamePageState extends ConsumerState<GamePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            ref.read(playerProvider.notifier).saveCurrentGame();
-                            ref.read(playerProvider.notifier).resetGame();
-                            context.go('/scores');
-                          },
-                          icon: const Icon(
-                            Icons.save,
-                            color: Colors.lightGreenAccent,
-                          ),
-                          label: Text(
-                            "Spremi rezultat",
-                            style: TextStyles.declineButton,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green[800],
-                            shape: BeveledRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8),
-                            ),
-                            padding: EdgeInsets.all(20),
-                          ),
-                        ),
                         ElevatedButton.icon(
                           onPressed: () {
                             ref.read(playerProvider.notifier).resetGame();
@@ -243,9 +227,31 @@ class _GamePageState extends ConsumerState<GamePage> {
                               borderRadius: BorderRadiusGeometry.circular(8),
                             ),
                             padding: EdgeInsets.symmetric(
-                              horizontal: 30,
-                              vertical: 20,
+                              horizontal: 40,
+                              vertical: 30,
                             ),
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            ref.read(playerProvider.notifier).saveCurrentGame();
+                            ref.read(playerProvider.notifier).resetGame();
+                            context.go('/scores');
+                          },
+                          icon: const Icon(
+                            Icons.save,
+                            color: Colors.lightGreenAccent,
+                          ),
+                          label: Text(
+                            "Spremi rezultat",
+                            style: TextStyles.declineButton,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green[800],
+                            shape: BeveledRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(8),
+                            ),
+                            padding: EdgeInsets.all(30),
                           ),
                         ),
                       ],

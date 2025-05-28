@@ -57,44 +57,63 @@ class HomePage extends ConsumerWidget {
 
 void _inputDialog(BuildContext context) {
   final TextEditingController controller = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      shape: BeveledRectangleBorder(
-        borderRadius: BorderRadiusGeometry.circular(20),
-      ),
-      backgroundColor: ThemeColors.main,
-      elevation: 10,
-      shadowColor: ThemeColors.primary,
-      title: Text('Unesi broj igrača', style: TextStyles.mainButton),
-      content: InputWidget(
-        controller: controller,
-        hint: "3-7",
-        keyboardType: TextInputType.number,
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('Odustani', style: TextStyles.declineButton),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: ThemeColors.main),
-          onPressed: () {
-            final enteredText = controller.text;
-            final value = int.tryParse(enteredText);
+    builder: (context) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        focusNode.requestFocus();
+      });
 
-            if (value != null && value > 2 && value < 8) {
-              context.go('/game', extra: value);
-            } else {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Nemre tak')));
-            }
-          },
-          child: Text('Potvrdi', style: TextStyles.confirmButton),
+      return AlertDialog(
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(20),
         ),
-      ],
-    ),
+        backgroundColor: const Color.fromARGB(255, 95, 65, 54),
+        elevation: 10,
+        shadowColor: Colors.brown,
+        title: Text('Unesi broj igrača', style: TextStyles.mainButton),
+        content: InputWidget(
+          controller: controller,
+          hint: "3-7",
+          keyboardType: TextInputType.number,
+          focusNode: focusNode,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(15),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 24),
+            ),
+            child: Text('Odustani', style: TextStyles.declineButton),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ThemeColors.main,
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(15),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 24),
+            ),
+            onPressed: () {
+              final enteredText = controller.text;
+              final value = int.tryParse(enteredText);
+              if (value != null && value > 2 && value < 8) {
+                context.go('/game', extra: value);
+              } else {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Nemre tak')));
+              }
+            },
+            child: Text('Potvrdi', style: TextStyles.confirmButton),
+          ),
+        ],
+      );
+    },
   );
 }

@@ -11,8 +11,14 @@ class TextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static TextStyle names = notoSerif.copyWith(
+    fontSize: 14,
+    color: const Color.fromARGB(255, 194, 130, 11),
+    fontWeight: FontWeight.bold,
+  );
+
   static TextStyle declineButton = notoSerif.copyWith(
-    fontSize: 12,
+    fontSize: 14,
     color: ThemeColors.white,
   );
 
@@ -34,6 +40,16 @@ class TextStyles {
   static TextStyle text = notoSerif.copyWith(
     fontSize: 12,
     color: ThemeColors.greyText,
+  );
+
+  static TextStyle addedText = notoSerif.copyWith(
+    fontSize: 12,
+    color: Colors.lightGreen,
+  );
+
+  static TextStyle hintText = notoSerif.copyWith(
+    fontSize: 12,
+    color: Colors.orange,
   );
 
   static TextStyle alertText = notoSerif.copyWith(

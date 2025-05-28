@@ -8,17 +8,20 @@ class InputWidget extends StatelessWidget {
     required this.controller,
     required this.hint,
     required this.keyboardType,
+    this.focusNode,
   });
 
   final TextEditingController controller;
   final String hint;
   final TextInputType keyboardType;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
+      focusNode: focusNode,
       style: TextStyle(color: ThemeColors.white),
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
