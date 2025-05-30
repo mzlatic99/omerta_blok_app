@@ -170,189 +170,203 @@ class _GamePageState extends ConsumerState<GamePage> {
                 'Tablica - Runda ${ref.watch(playerProvider.notifier).currentRound}',
               ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: !_namesEntered
-            ? ListView(
-                children: [
-                  ...List.generate(widget.playerCount, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: InputWidget(
-                        controller: _nameControllers[index],
-                        hint: "Ime ${index + 1}. igrača",
-                        keyboardType: TextInputType.name,
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 20),
-                  MainButton(title: "Potvrdi imena", onPressed: _confirmNames),
-                ],
-              )
-            : Column(
-                children: [
-                  Expanded(
-                    child: ListView(
-                      children: [
-                        ...sortedPlayers.map((player) {
-                          final isLeader = leadingPlayerIds.contains(player.id);
-                          final updatedThisRound = ref
-                              .read(playerProvider.notifier)
-                              .playersUpdatedThisRound;
-                          final needsUpdate = !updatedThisRound.contains(
-                            player.id,
-                          );
-                          return Card(
-                            margin: EdgeInsets.only(bottom: 16),
-                            elevation: isLeader ? 8 : 0,
-                            shadowColor: isLeader
-                                ? Colors.orange[200]
-                                : Colors.transparent,
-                            key: ValueKey(player.id),
-                            shape: BeveledRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            color: isLeader ? Colors.orange[100] : Colors.brown,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: ThemeColors.primary,
-                                child: Text(
-                                  '${player.currentScore}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: ThemeColors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: !_namesEntered
+              ? ListView(
+                  children: [
+                    ...List.generate(widget.playerCount, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: InputWidget(
+                          controller: _nameControllers[index],
+                          hint: "Ime ${index + 1}. igrača",
+                          keyboardType: TextInputType.name,
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 20),
+                    MainButton(
+                      title: "Potvrdi imena",
+                      onPressed: _confirmNames,
+                    ),
+                  ],
+                )
+              : Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ...sortedPlayers.map((player) {
+                            final isLeader = leadingPlayerIds.contains(
+                              player.id,
+                            );
+                            final updatedThisRound = ref
+                                .read(playerProvider.notifier)
+                                .playersUpdatedThisRound;
+                            final needsUpdate = !updatedThisRound.contains(
+                              player.id,
+                            );
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 16),
+                              elevation: isLeader ? 8 : 0,
+                              shadowColor: isLeader
+                                  ? Colors.orange[200]
+                                  : Colors.transparent,
+                              key: ValueKey(player.id),
+                              shape: BeveledRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              color: isLeader
+                                  ? Colors.orange[100]
+                                  : Colors.brown,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: ThemeColors.primary,
+                                  child: Text(
+                                    '${player.currentScore}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: ThemeColors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              title: Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      player.name,
-                                      style: TextStyles.names,
+                                title: Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        player.name,
+                                        style: TextStyles.names,
+                                      ),
                                     ),
-                                  ),
-                                  if (isLeader)
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Icon(
-                                        Icons.emoji_events,
-                                        color: Color.fromARGB(
-                                          213,
-                                          255,
-                                          109,
-                                          64,
+                                    if (isLeader)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: Icon(
+                                          Icons.emoji_events,
+                                          color: Color.fromARGB(
+                                            213,
+                                            255,
+                                            109,
+                                            64,
+                                          ),
+                                          size: 24,
                                         ),
-                                        size: 24,
                                       ),
-                                    ),
-                                  if (needsUpdate)
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Icon(
-                                        Icons.access_time,
-                                        color: Colors.red,
-                                        size: 20,
+                                    if (needsUpdate)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: Icon(
+                                          Icons.access_time,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
                                       ),
+                                  ],
+                                ),
+                                subtitle: Text(
+                                  'Zadnje dodano: +${player.lastScore}',
+                                  style: TextStyles.addedText,
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      tooltip: "Uredi bodove",
+                                      onPressed: () =>
+                                          _editPointsDialog(player),
                                     ),
-                                ],
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      tooltip: "Dodaj bodove",
+                                      onPressed: () => _addPointsDialog(player),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              subtitle: Text(
-                                'Zadnje dodano: +${player.lastScore}',
-                                style: TextStyles.addedText,
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.edit),
-                                    tooltip: "Uredi bodove",
-                                    onPressed: () => _editPointsDialog(player),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.add),
-                                    tooltip: "Dodaj bodove",
-                                    onPressed: () => _addPointsDialog(player),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
+                            );
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              ref.read(playerProvider.notifier).resetGame();
-                              context.go('/');
-                            },
-                            icon: const Icon(
-                              Icons.restart_alt,
-                              color: Color.fromARGB(255, 255, 17, 0),
-                            ),
-                            label: Text(
-                              "Resetiraj",
-                              style: TextStyles.declineButton,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                190,
-                                86,
-                                0,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                ref.read(playerProvider.notifier).resetGame();
+                                context.go('/');
+                              },
+                              icon: const Icon(
+                                Icons.restart_alt,
+                                color: Color.fromARGB(255, 255, 17, 0),
                               ),
-                              shape: BeveledRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(8),
+                              label: Text(
+                                "Resetiraj",
+                                style: TextStyles.declineButton,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 24,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  190,
+                                  86,
+                                  0,
+                                ),
+                                shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    8,
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 24,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              ref
-                                  .read(playerProvider.notifier)
-                                  .saveCurrentGame();
-                              ref.read(playerProvider.notifier).resetGame();
-                              context.go('/scores');
-                            },
-                            icon: const Icon(
-                              Icons.save,
-                              color: Colors.lightGreenAccent,
-                            ),
-                            label: Text(
-                              "Spremi",
-                              style: TextStyles.declineButton,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green[800],
-                              shape: BeveledRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(8),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                ref
+                                    .read(playerProvider.notifier)
+                                    .saveCurrentGame();
+                                ref.read(playerProvider.notifier).resetGame();
+                                context.go('/scores');
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Colors.lightGreenAccent,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 19,
-                                vertical: 24,
+                              label: Text(
+                                "Spremi",
+                                style: TextStyles.declineButton,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[800],
+                                shape: BeveledRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(
+                                    8,
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 19,
+                                  vertical: 24,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }
